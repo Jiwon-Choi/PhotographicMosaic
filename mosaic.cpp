@@ -4,8 +4,8 @@
 #include <string.h>
 #include <time.h>
 
-#define DB 10000
-#define SMALL 8
+#define DB 50000 // data 갯수
+#define SMALL 8 // data resize할 크기
 
 using namespace cv;
 using namespace std;
@@ -24,13 +24,14 @@ int main() {
 	
 	clock_t dataStart = clock();
 
-	// data 폴더 접근
-	VideoCapture cap("C:/data/img%05d.jpg");
-	if (!cap.isOpened()) return -1;
-
 	// data를 읽고 BGR 평균을 배열에 저장
 	for(int n=0; n<DB; n++) {
-		cap.read(data);
+		char address[100] = "C:/mosaicData/img";
+		char strmem[10];
+		sprintf_s(strmem, "%05d", n);
+		strcat_s(address, strmem);
+		strcat_s(address, ".jpg");
+		data = imread(address, IMREAD_COLOR);
 		
 		int blue = 0, green = 0, red = 0;
 		for (int y = 0; y < data.rows; y++) {
@@ -81,7 +82,7 @@ int main() {
 			
 			// 가장 차이가 작았던 사진을 로드하고 크기 조정
 			Mat mini;
-			char address[100] = "C:/data/img";
+			char address[100] = "C:/mosaicData/img";
 			char strmem[10];
 			sprintf_s(strmem, "%05d", mem);
 			strcat_s(address, strmem);
